@@ -1,0 +1,5 @@
+- name: Add host to the in memory 
+  hosts: localhost
+  gather_facts: false
+  roles: 
+    - {role: win-java-env-setup}
