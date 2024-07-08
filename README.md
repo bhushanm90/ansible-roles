@@ -3,7 +3,8 @@
 
 ## Preface
 This role will help you to setup java environment before installing java base products.
-It will find the existing installation path along with latest version and help be setting up the java environment for you
+However, it will find the existing installation path along with latest version.
+This role will be setting up the java environment path for you.
 The java is require by some products as prerequisite like Ant, Maven and tomcat.
 
 
