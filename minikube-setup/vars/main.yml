@@ -1,0 +1,17 @@
+---
+# vars file for minikube-setup
+docker_rpm_remove_list: 
+    - docker.io 
+    - docker-doc 
+    - docker-compose 
+    - podman-docker 
+    - containerd 
+    - runc
+  
+  
+docker_rpm_list:
+  - docker-ce
+  - docker-ce-cli 
+  - containerd.io 
+  - docker-buildx-plugin 
+  - docker-compose-plugin

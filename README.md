@@ -1,4 +1,4 @@
-# win-java-env-setup
+# minikube-setup
 
 
 ## Preface

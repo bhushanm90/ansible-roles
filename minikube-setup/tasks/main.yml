@@ -1,0 +1,5 @@
+---
+# tasks file for minikube-setup
+- name: load the "{{ ansible_os_family }}"
+  ansible.builtin.import_tasks: ansible_os_family.yml
+  when: ansible_os_family == Debian
