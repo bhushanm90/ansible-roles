@@ -1,7 +1,7 @@
 ---
 # tasks file for win-java-env-setup
 - name: Load java env playbook 
-  ansible.builtin.include_task: javaEnvpathSetup.yml
+  ansible.builtin.include_tasks: javaEnvpathSetup.yml
 
 - name: set status
   ansible.builtin.set_fact: 
