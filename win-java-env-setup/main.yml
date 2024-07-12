@@ -1,5 +1,5 @@
-- name: Add host to the in memory 
-  hosts: localhost
+- name: Setup java environment 
+  hosts: localserver
   gather_facts: false
   roles: 
-    - {role: win-java-env-setup}
+    - role: "{{ playbook_dir }}"
