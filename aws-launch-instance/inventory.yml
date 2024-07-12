@@ -1,0 +1,7 @@
+webserver:
+  hosts:
+    192.168.0.204:
+
+localserver:
+  hosts:
+    192.168.0.172:
