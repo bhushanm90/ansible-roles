@@ -1,0 +1,6 @@
+- name: Add host to the in memory 
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  roles: 
+    - {role: aws-launch-instance}

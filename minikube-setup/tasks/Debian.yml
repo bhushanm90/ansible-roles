@@ -1,0 +1,59 @@
+- name: Remove existing package first
+  ansible.builtin.apt: 
+    name: "{{ item }}"
+    state: present 
+  loop: 
+    "{{ docker_rpm_remove_list }}" 
+    
+- name: Install Docker 
+  ansible.builtin.apt: 
+    - name: "{{ item }}"
+      state: present
+  loop: 
+    "{{ docker_rpm_list }}"  
+
+- name: Verify the installation 
+  ansible.builtin.shell: "docker run hello-world"
+  register: checkDockstat    
+
+- name: Install cacert
+  ansible.builtin.apt: 
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop: 
+    - "ca-certificates" 
+    - "curl"
+
+- name: set permission and pull gpg key
+  ansible.builtin.command: "{{ item }}" 
+  ignore_errors: True 
+  loop: 
+    - "install -m 0755 -d /etc/apt/keyrings"
+    - "curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc" 
+
+- name: set permission 
+  ansible.builtin.command: "chmod a+r /etc/apt/keyrings/docker.asc"
+
+- name: Add repository 
+  ansible.builtin.shell: | 
+   echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \$(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+- name: Add Debian repository
+  command: "{{ item }}"
+  loop: 
+    - "sudo dpkg -i minikube_latest_amd64.deb"
+    - "dpkg -i minikube_latest_amd64.deb" 
+      
+- name: update cache 
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Start minikube service
+  ansible.builtin.shell: minikube start
+  register: checkMinikubeService
+
+- name: Print service status
+  ansible.builtin.set_facts: 
+    minikubeInstallStatInfo: "{{ minikube Successfully installed }}"
+  when: checkMinikubeService.changed

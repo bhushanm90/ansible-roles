@@ -1,0 +1,6 @@
+- name: create instance 
+  hosts: localserver
+  connection: local
+  gather_facts: false
+  roles: 
+    - role: "{{ playbook_dir }}" 
