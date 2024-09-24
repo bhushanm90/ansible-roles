@@ -1,0 +1,11 @@
+[prometheus]
+localhost
+
+[node_exporter]
+localhost
+
+[alertmanager]
+localhost
+
+[grafana]
+localhost

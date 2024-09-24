@@ -1,0 +1,66 @@
+# - name: Install grafana
+#   yum:
+#     name: https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-{{ version }}-1.x86_64.rpm
+#     state: latest
+#   when: ansible_os_family == 'Redhat'
+
+# - name: Install grafana
+#   apt:
+#     name: https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-{{ version }}-1.x86_64.rpm
+#     state: latest
+#   when: ansible_os_family == 'Debian'
+
+- name: Install the prerequisite packages
+  shell: sudo apt-get install -y apt-transport-https software-properties-common wget
+
+- name: Create directory 
+  file: 
+    path: /etc/apt/keyrings/
+    state: directory 
+
+- name: Import the GPG key
+  shell: "wget -q -O - https://apt.grafana.com/gpg.key | gpg --dearmor | sudo tee /etc/apt/keyrings/grafana.gpg > /dev/null" 
+
+- name: To add a repository for stable releases, run the following command
+  shell: "echo 'deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com stable main' | sudo tee -a /etc/apt/sources.list.d/grafana.list"
+
+- name: To add a repository for beta releases, run the following command
+  shell: "echo 'deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com beta main' | sudo tee -a /etc/apt/sources.list.d/grafana.list"
+
+# - name: Run the following command to update the list of available packages
+#   apt: 
+#     update_cache: yes 
+
+- name: Install grafana 
+  apt: 
+    name: grafana
+    state: latest 
+
+- name: "Grafana configuration file copy"
+  template:
+    src: "grafana.conf.j2"
+    dest: /etc/grafana/grafana.ini
+  notify: event_restart_grafana
+
+- name: "Grafana server started"
+  service:
+    name: grafana-server
+    enabled: true
+    state: started
+  
+
+- name: "Check if Grafana is accessible."
+  uri:
+    url: http://127.0.0.1:3000
+    method: GET
+  #  return_content: yes 
+    status_code: 200
+  register: checkGrafana
+  until: checkGrafana.status == 200
+  tags: grafana
+  ignore_errors: yes
+
+- set_fact: 
+    grafanaStat: "The GRAFANA IS accessible and status code is {{ checkGrafana.status }}"
+  tags: grafana
+
